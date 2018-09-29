@@ -1,0 +1,2 @@
+defmodule EssentiaProto do
+end
