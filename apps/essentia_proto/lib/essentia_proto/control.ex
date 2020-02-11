@@ -16,7 +16,7 @@ defmodule EssentiaProto.Control do
     end
   end
 
-  def command(command, response, parser(/ / (& &1))) do
+  def command(command, response, parser \\ (& &1)) when is_binary(command) and is_binary(response) do
     # Assumes active: true
     write(@uart, "*#{command}")
     :ok = drain(@uart)

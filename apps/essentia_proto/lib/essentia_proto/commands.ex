@@ -1,6 +1,18 @@
 defmodule EssentiaProto.Commands do
   @moduledoc "High-level commands to the E6D, based on documentation from NuVo."
 
+  # One thing the manual is initially unclear about, and I realized when I got
+  # to the last page of the appendix, is that responses MAY come without an
+  # associated command. This module (and the command/2,3 functions) should be
+  # sufficient for poking at the amp's interface but will be insufficient for a
+  # full control interface which may receive unmatched responses.
+  #
+  # When I go to add a more unified interface, I might need some "deferred
+  # reply" tricks typical in GenServer processes that handle interacting with
+  # laggy or highly-contended resources. That is, storing the "from" in
+  # handle_call into the process state and using GenServer.reply() when the
+  # response arrives over the UART.
+
   import EssentiaProto.Control, only: [command: 2, command: 3]
 
   alias EssentiaProto.{
@@ -87,7 +99,7 @@ defmodule EssentiaProto.Commands do
   end
 
   @doc "ALL MUTE OFF"
-  def all_mute() do
+  def all_unmute() do
     command("ALLMOFF", "ALLMOFF", &parse_confirmation/1)
   end
 
